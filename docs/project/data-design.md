@@ -8,21 +8,7 @@
 目的： 为在购销合同模块中的货物信息和附件信息都有所属的生产厂家
 注：还不是最终的，还是需要根据现实需求详细设计
 
-|序号|中文名|英文名 | 类型 |  备注 |
-|:---:|:--------:|:--:|:--:|
-| 1 |编号 | FACTORY_ID |VARCHAR(40)|UUID |
-| 2 |全称| FULL_NAME| VARCHAR(200)| 根据用户的最大长度*4|
-| 3 |简称| FACTORY_NAME| VARCHAR(50)| |
-| 4 |联系人| CONTACTS| VARCHAR(30)| |
-| 5 |电话| PHONE| VARCHAR(20)| |
-| 6 |手机| MOBILE| VARCHAR(20)| |
-| 7 |传真| FAX| VARCHAR(20)| |
-| 8 |备注| CNOTE| VARCHAR(2000)| 可能与关键字冲突，加个前缀|
-| 9 |验货员| INSPECTOR|VARCHAR(30) | |
-| 10 |创建人 |CREATE_BY |VARCHAR(40) |当前登录人的ID |
-| 11 |创建部门 |CREATE_DEPT |VARCHAR(40) |当前登录人的部门 |
-| 12 |创建时间 |CREATE_TIME |DATE | |
-| 13 |排序号 | ORDER_NO|INT |根据厂家id排序的 |
+![database-design](../imgs/database-design.png)
 
 ### maven工程增加依赖(保存这些文件)
 1. 主要核心框架 SpringMVC,Spring,Mybatis
@@ -102,7 +88,7 @@ c3p0.CombPooledDataSource
 技巧：
 1.有时候我们会发现property name 配置driver可以是jdbcDriver或者是driverClass，这时需要根据我们导入的dataSource查看源码来配置。
 2.利用jdbc.properties文件
-```
+```xml
 <!--数据库配置-->
 <property name="driverClass" value=${}/>
 <property name="jdbcUrl" value=${}/>
@@ -117,7 +103,7 @@ c3p0.CombPooledDataSource
 ```
 - 5.SessionFactory Bean
 mybatis下是sqlSessionFactory
-```
+```xml
 <bean id="sqlSessionFactory" class="...spring.SqlSessionFactoryBean">
 <property id="dataSource" ref="dataSource"/>
 spring整合mybatis
@@ -125,13 +111,13 @@ spring整合mybatis
 </bean>
 ```
 - 5.事务transaction
-```
+```xml
 <bean id="txManage" class="..DataSourceTransactionManager">
 绑定dataSource
 <property name="dataSource" ref="dataSource"/>
 ```
 - 6.配置tx:advice  事务处理通知
-```
+```xml
 <tx:advice id="txAdvice" transaction-manager="txManager">
   <tx:attributes>
   哪些方法事务处理后需要通知：
@@ -146,7 +132,7 @@ spring整合mybatis
 </tx:advice>
 ```
 7.配置aop，管理所有的service包下的类
-```
+```xml
 <aop:config>
   切入点
   <aop:pointcut expression="execution (com.hwolf.service.*.*(..))" id="txPointCut" />
@@ -164,7 +150,7 @@ spring整合mybatis
 
 12. 配置web.xml
 - 1.spring框架
-```
+```xml
 <context-param>
   <param-name>contextConfigLocation</param-name>
   <param-value>classpath:beans.xml</param-value>
@@ -176,6 +162,7 @@ spring整合mybatis
   </listener-class>
 </listener>
 ```
+
 - 2.springmvc servlet---也要加载spring-mvc.xml
 ```
 拦截器
